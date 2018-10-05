@@ -18,7 +18,7 @@ Partitioning your table for a big sort.
 
     Make your own grid computing application on a power workstation(SAS calls it a PC)
 
-    The method you coose depends almost entirely on the locality of keys, cardinality of keys
+    The method you choose depends almost entirely on the locality of keys, cardinality of keys
     and skewness of keys.
 
     One Technique:
@@ -146,7 +146,8 @@ Partitioning your table for a big sort.
     * VIEW to put back together;
     data humptyback/view=humptyback;
       set sd1.a1 sd1.a2 sd1.a3 sd1.a4 sd1.a5 sd1.a6 sd1.a7 sd1.a0;
-      /* no by statement needed if pieces sorted */
+      /* you do need the by statement for the mod technique */
+      /* no by statement needed if pieces sorted  ie piece1 0<=key<=1000000, 1000001<=piece2<=2000000*/
       /* cand be faster than one physical datasets depending on where the pieces are stored */
     run;quit;
 
