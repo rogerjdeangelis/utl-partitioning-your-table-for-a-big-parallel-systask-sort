@@ -1,6 +1,5 @@
 # utl-partitioning-your-table-for-a-big-sort
-Partitioning your table for a big sort.
-    Partitioning your table for a big sort
+    Partitioning your table for a big parallel systask sort
 
     see SAS Forum
     https://tinyurl.com/y9rrqngr
@@ -18,7 +17,7 @@ Partitioning your table for a big sort.
 
     Make your own grid computing application on a power workstation(SAS calls it a PC)
 
-    The method you choose depends almost entirely on the locality of keys, cardinality of keys
+    The method you coose depends almost entirely on the locality of keys, cardinality of keys
     and skewness of keys.
 
     One Technique:
@@ -84,14 +83,15 @@ Partitioning your table for a big sort.
 
     WORKING CODE (run simultaneously or sequentially - restricts the bigest temp table)
 
-       proc sort data = sd1.bigdata(where=(mod(key,8)=1)) out= sd1.a1 noequals;
-       proc sort data = sd1.bigdata(where=(mod(key,8)=2)) out= sd1.a2 noequals;
-       proc sort data = sd1.bigdata(where=(mod(key,8)=3)) out= sd1.a3 noequals;
-       proc sort data = sd1.bigdata(where=(mod(key,8)=4)) out= sd1.a4 noequals;
-       proc sort data = sd1.bigdata(where=(mod(key,8)=5)) out= sd1.a5 noequals;
-       proc sort data = sd1.bigdata(where=(mod(key,8)=6)) out= sd1.a6 noequals;
-       proc sort data = sd1.bigdata(where=(mod(key,8)=7)) out= sd1.a7 noequals;
-       proc sort data = sd1.bigdata(where=(mod(key,8)=0)) out= sd1.a0 noequals;
+
+       proc sort data = sd1.bigdata(where=(mod(key,8)=1)) out= sd1.a1 noequals;by ran;run;quit;
+       proc sort data = sd1.bigdata(where=(mod(key,8)=2)) out= sd1.a2 noequals;by ran;run;quit;
+       proc sort data = sd1.bigdata(where=(mod(key,8)=3)) out= sd1.a3 noequals;by ran;run;quit;
+       proc sort data = sd1.bigdata(where=(mod(key,8)=4)) out= sd1.a4 noequals;by ran;run;quit;
+       proc sort data = sd1.bigdata(where=(mod(key,8)=5)) out= sd1.a5 noequals;by ran;run;quit;
+       proc sort data = sd1.bigdata(where=(mod(key,8)=6)) out= sd1.a6 noequals;by ran;run;quit;
+       proc sort data = sd1.bigdata(where=(mod(key,8)=7)) out= sd1.a7 noequals;by ran;run;quit;
+       proc sort data = sd1.bigdata(where=(mod(key,8)=0)) out= sd1.a0 noequals;by ran;run;quit;
 
 
     FULL SOLUTION
@@ -146,8 +146,7 @@ Partitioning your table for a big sort.
     * VIEW to put back together;
     data humptyback/view=humptyback;
       set sd1.a1 sd1.a2 sd1.a3 sd1.a4 sd1.a5 sd1.a6 sd1.a7 sd1.a0;
-      /* you do need the by statement for the mod technique */
-      /* no by statement needed if pieces sorted  ie piece1 0<=key<=1000000, 1000001<=piece2<=2000000*/
+      by rand;
       /* cand be faster than one physical datasets depending on where the pieces are stored */
     run;quit;
 
@@ -171,6 +170,8 @@ Partitioning your table for a big sort.
      26856808     0.0000079728
      75829272     0.0000089728
      66415312     0.0000099728
+
+
 
 
 
