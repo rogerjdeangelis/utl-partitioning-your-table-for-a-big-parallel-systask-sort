@@ -82,14 +82,15 @@ Up to 40 obs SD1.WANT total obs=80,000,000
 
 WORKING CODE (run simultaneously or sequentially - restricts the bigest temp table)
 
-   proc sort data = sd1.bigdata(where=(mod(key,8)=1)) out= sd1.a1 noequals;
-   proc sort data = sd1.bigdata(where=(mod(key,8)=2)) out= sd1.a2 noequals;
-   proc sort data = sd1.bigdata(where=(mod(key,8)=3)) out= sd1.a3 noequals;
-   proc sort data = sd1.bigdata(where=(mod(key,8)=4)) out= sd1.a4 noequals;
-   proc sort data = sd1.bigdata(where=(mod(key,8)=5)) out= sd1.a5 noequals;
-   proc sort data = sd1.bigdata(where=(mod(key,8)=6)) out= sd1.a6 noequals;
-   proc sort data = sd1.bigdata(where=(mod(key,8)=7)) out= sd1.a7 noequals;
-   proc sort data = sd1.bigdata(where=(mod(key,8)=0)) out= sd1.a0 noequals;
+  
+   proc sort data = sd1.bigdata(where=(mod(key,8)=1)) out= sd1.a1 noequals;by ran;run;quit;
+   proc sort data = sd1.bigdata(where=(mod(key,8)=2)) out= sd1.a2 noequals;by ran;run;quit;
+   proc sort data = sd1.bigdata(where=(mod(key,8)=3)) out= sd1.a3 noequals;by ran;run;quit;
+   proc sort data = sd1.bigdata(where=(mod(key,8)=4)) out= sd1.a4 noequals;by ran;run;quit;
+   proc sort data = sd1.bigdata(where=(mod(key,8)=5)) out= sd1.a5 noequals;by ran;run;quit;
+   proc sort data = sd1.bigdata(where=(mod(key,8)=6)) out= sd1.a6 noequals;by ran;run;quit;
+   proc sort data = sd1.bigdata(where=(mod(key,8)=7)) out= sd1.a7 noequals;by ran;run;quit;
+   proc sort data = sd1.bigdata(where=(mod(key,8)=0)) out= sd1.a0 noequals;by ran;run;quit;
 
 
 FULL SOLUTION
@@ -144,7 +145,7 @@ waitfor sys1 sys2 sys3 sys4  sys5 sys6 sys7 sys8;
 * VIEW to put back together;
 data humptyback/view=humptyback;
   set sd1.a1 sd1.a2 sd1.a3 sd1.a4 sd1.a5 sd1.a6 sd1.a7 sd1.a0;
-  /* no by statement needed if pieces sorted */
+  by rand;
   /* cand be faster than one physical datasets depending on where the pieces are stored */
 run;quit;
 
